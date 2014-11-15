@@ -77,7 +77,7 @@ void qk_setup()
 	qk_board_set_name("Bluetooth 2.0");
 
 	qk_core_register_callback(QK_CORE_CALLBACK_APP,
-							  core_callback_app);
+                              core_callback_app);
 
 	qk_protocol_register_callback(qk_protocol_comm,
 								  QK_PROTOCOL_CALLBACK_SENDBYTES,
