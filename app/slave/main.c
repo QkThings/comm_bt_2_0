@@ -18,25 +18,21 @@ bool send = true;
 
 void core_callback_app(qk_callback_arg *arg)
 {
-	int bytes_available = qk_uart_bytes_available(COMM_UART_ID);
 
-	if(bytes_available > 0)
-	{
-		int bytes_read = 0;
-		uint8_t rxbuf[128];
-		bytes_read = qk_uart_read(COMM_UART_ID, rxbuf, bytes_available);
-		rxbuf[bytes_read] = '\0';
-		QK_LOG_DEBUG("%s\n", (char*)rxbuf);
-
-		qk_protocol_process_bytes(rxbuf, bytes_read, qk_protocol_comm);
-	}
 }
 
-void protocol_callback_send_bytes(qk_callback_arg *arg)
+void protocol_callback_write(qk_callback_arg *arg)
 {
 	uint8_t *buf = QK_BUF_PTR( QK_CALLBACK_ARG_BUF(arg) );
 	uint16_t count =  QK_BUF_COUNT( QK_CALLBACK_ARG_BUF(arg) );
 	qk_uart_write(COMM_UART_ID, buf, count);
+}
+
+void protocol_callback_read(qk_callback_arg *arg)
+{
+	uint8_t rxbuf[32];
+	int bytes_read = qk_uart_read(COMM_UART_ID, rxbuf, 32);
+	qk_protocol_process_bytes(rxbuf, bytes_read, qk_protocol_comm);
 }
 
 void hc05_init()
@@ -80,8 +76,12 @@ void qk_setup()
                               core_callback_app);
 
 	qk_protocol_register_callback(qk_protocol_comm,
-								  QK_PROTOCOL_CALLBACK_SENDBYTES,
-								  protocol_callback_send_bytes);
+								  QK_PROTOCOL_CALLBACK_WRITE,
+								  protocol_callback_write);
+
+	qk_protocol_register_callback(qk_protocol_comm,
+								  QK_PROTOCOL_CALLBACK_READ,
+								  protocol_callback_read);
 
 	hc05_init();
 }
