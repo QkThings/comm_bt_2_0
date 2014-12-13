@@ -48,6 +48,9 @@ void hc05_init()
 	// Enable UART
 	qk_uart_enable(COMM_UART_ID);
 
+	//qk_gpio_set_pin(BT_MODE, HIGH);
+	//qk_gpio_set_pin(BT_RST, HIGH)
+
 	// Reset with MODE=1
 	qk_gpio_set_pin(BT_MODE, HIGH);
 	qk_gpio_set_pin(BT_RST, LOW);
@@ -56,8 +59,8 @@ void hc05_init()
 	delay_ms(80);
 
 	// Configure serial port parameters (38400, 1 stop bit, no parity)
-	qk_uart_write(QK_UART_1, "AT+UART=38400,1,0\r\n", 19);
-	delay_ms(200);
+	//qk_uart_write(QK_UART_1, "AT+UART=38400,1,0\r\n", 19);
+	//delay_ms(200);
 
 	// Reset with MODE=0
 	qk_gpio_set_pin(BT_MODE, LOW);
